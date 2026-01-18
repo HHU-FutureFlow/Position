@@ -4,12 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7017b44a-3f73-4608-a920-b8f6a04998ef" name="更改" comment="1.17">
-      <change afterPath="$PROJECT_DIR$/Yolo.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/best.pt" afterDir="false" />
+    <list default="true" id="7017b44a-3f73-4608-a920-b8f6a04998ef" name="更改" comment="1.18">
+      <change afterPath="$PROJECT_DIR$/main2.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Function.py" beforeDir="false" afterPath="$PROJECT_DIR$/Function.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/Function.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,6 +48,7 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "Python.Function.executor": "Run",
     "Python.main.executor": "Run",
+    "Python.main2.executor": "Run",
     "Python.test.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
@@ -103,7 +103,15 @@
       <option name="project" value="LOCAL" />
       <updated>1768660116794</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="1.18">
+      <option name="closed" value="true" />
+      <created>1768742433187</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1768742433187</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -119,6 +127,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="1.17" />
-    <option name="LAST_COMMIT_MESSAGE" value="1.17" />
+    <MESSAGE value="1.18" />
+    <option name="LAST_COMMIT_MESSAGE" value="1.18" />
   </component>
 </project>

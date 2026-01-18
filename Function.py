@@ -46,7 +46,7 @@ def RealsenseConfig():
 
 
 #预留接口，从yolo模型中获取目标框中心点，提取中心点坐标，再进行映射
-def GlobalDepthVisualize(Depthimage, Colorimage):
+def GlobalDepthVisualize(Depthimage):
     # 应用颜色映射到深度图像（用于可视化）
     depth_colormap = cv2.applyColorMap(
         cv2.convertScaleAbs(Depthimage, alpha=0.03),
@@ -88,6 +88,7 @@ def drawFrame(yolo_result, depthframe, target, fps_start_time, frameCount=0):
     )
 
     cv2.imshow('Color', annotated_frame)
+    cv2.imshow('Depth',depthframe)
 
 
 def positiondetect(depthframe, yolo_results):

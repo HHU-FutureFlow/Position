@@ -16,16 +16,17 @@ if __name__ == '__main__':
     print(f"成功加载模型")
     while True:
         result = fc.YoloDetect(model,cf)
-        if result[0].boxes == None:
-            fc.drawFrame(result, df, [0,0], fst)
+        depth1 = fc.GlobalDepthVisualize(df)
+        if result[0].boxes is None:
+            fc.drawFrame(result, depth1, [0,0], fst)
             continue
         boxes_xywh = result[0].boxes.xywh.cpu().numpy()
         if len(boxes_xywh) == 0:
-            fc.drawFrame(result, df,[0,0], fst)
+            fc.drawFrame(result,depth1,[0,0], fst)
             continue
         Class_ids, Target_x, Target_y, Target_z = fc.positiondetect(df,result)
         target_position = [Target_x,Target_y,Target_z]
-        fc.drawFrame(result, df, target_position, fst)
+        fc.drawFrame(result, depth1, target_position, fst)
 
 
 
