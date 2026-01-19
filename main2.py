@@ -11,16 +11,11 @@ pipeline = rs.pipeline()
 config = rs.config()
 
 # 启用彩色和深度流
-config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)
-config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
+config.enable_stream(rs.stream.depth, 640, 640, rs.format.z16, 30)
+config.enable_stream(rs.stream.color, 640, 640, rs.format.bgr8, 30)
 
 # 开始流传输
 profile = pipeline.start(config)
-
-# 获取深度传感器的深度标尺（单位：米）
-depth_sensor = profile.get_device().first_depth_sensor()
-depth_scale = depth_sensor.get_depth_scale()
-print(f"Depth Scale: {depth_scale}")
 
 align_to = rs.stream.color
 align = rs.align(align_to)
@@ -43,13 +38,17 @@ try:
         aligned_depth_frame = aligned_frames.get_depth_frame()
         color_frame = aligned_frames.get_color_frame()
 
+        depth_intrin = aligned_depth_frame.profile.as_video_stream_profile().intrinsics  # 获取深度参数（像素坐标系转相机坐标系会用到）
+        color_intrin = color_frame.profile.as_video_stream_profile().intrinsics  # 获取相机内参
+
         # 转换为numpy数组 Cir:低运行效率段，考虑优化
         depth_image = np.asanyarray(aligned_depth_frame.get_data())
         color_image = np.asanyarray(color_frame.get_data())
 
         results = model(color_image, conf=0.5)
 
-        target_x, target_y, target_z = 0, 0, 0.0
+        pixel_target_x, Pixel_target_y, Camera_target_z = 0, 0, 0.0
+        color_pixel = [0,0]
         class_id = -1  # 用-1标记无有效目标
         boxes_xywh = np.array([])  # 初始化空数组
         class_ids = np.array([])  # 初始化空数组
@@ -62,9 +61,10 @@ try:
             if len(boxes_xywh) > 0 and len(class_ids) > 0:
                 center_x, center_y, high = int(boxes_xywh[0, 0]), int(boxes_xywh[0, 1]), int(boxes_xywh[0, 3])
 
-                if class_ids[0] == 1:
-                    target_x, target_y = center_x, int(center_y + (high / 4))
-                    target_z = float(depth_image[target_y, target_x])* depth_scale
+                if class_ids[0] == 0: #Cir： 深度可以取周边几个像素平均值，如果相差过大说明识别错误，重新识别
+                    Pixel_target_x, Pixel_target_y = center_x, int(center_y + (high*0.75))
+                    color_pixel = [Pixel_target_x, Pixel_target_y]
+                    Camera_target_z = aligned_depth_frame.get_distance(color_pixel)
 
             else:
                 # 容错：无有效检测目标（数组为空）
@@ -74,11 +74,11 @@ try:
             print("提示：无任何检测结果，boxes为None")
             # 应用颜色映射到深度图像（用于可视化）
 
-        target_position = [
-            target_x,
-            target_y,
-            target_z
-            ]
+
+        #Cir: 未考虑畸变参数，所以使用以下函数不确定是否像素对齐irhongwai Normalize_target_x, Normalize_target_y =
+
+        Camera_position = rs.rs2_deproject_pixel_to_point(depth_intrin, color_pixel , Camera_target_z)
+
 
         depth_colormap = cv2.applyColorMap(
             cv2.convertScaleAbs(depth_image, alpha=0.03),
@@ -86,8 +86,8 @@ try:
 
         annotated_frame = results[0].plot()
 
-        point_coords = (target_position[0], target_position[1])
-        radius = 3
+        point_coords = (Camera_position[0], Camera_position[1])
+        radius = 1
         color = (0, 0, 255)
         thickness = -1
 
